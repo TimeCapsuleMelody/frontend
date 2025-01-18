@@ -9,11 +9,18 @@ export default function Home() {
   const router = useRouter();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 3000);
+    const isFirstVisit = !localStorage.getItem('hasVisited');
+    
+    if (isFirstVisit) {
+      const timer = setTimeout(() => {
+        setLoading(false);
+        localStorage.setItem('hasVisited', 'true');
+      }, 3000);
 
-    return () => clearTimeout(timer);
+      return () => clearTimeout(timer);
+    } else {
+      setLoading(false);
+    }
   }, []);
 
   if (loading) {
