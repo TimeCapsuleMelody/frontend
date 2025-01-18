@@ -32,9 +32,7 @@ const FormSchema = z.object({
   dob: z.date({
     required_error: "날짜를 선택해주세요.",
   }),
-  image: z.instanceof(FileList, {
-    required_error: "사진을 업로드해주세요.",
-  }),
+  image: z.any().refine((files) => files?.length > 0, "사진을 업로드해주세요."),
   memory: z.string().min(1, "추억을 입력해주세요."),
   people: z.array(z.string()).default([]),
   keywords: z.array(z.string()).default([]),
@@ -56,6 +54,15 @@ export default function DatePickerForm() {
       musicLink: "",
     },
   })
+
+  const getInformation = async () => {
+    const response = await fetch('https://kubook-exp.shop/information/@me')
+    const data = await response.json()
+    console.log('hi')
+    console.log(data)
+    setPeople(data.people)
+    setKeywords(data.keywords)
+  }
 
   async function onSubmit(data) {
     try {
