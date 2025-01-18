@@ -6,6 +6,7 @@ import { CalendarIcon, ImageIcon, PlusCircleIcon, XCircleIcon } from "lucide-rea
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useState, useEffect } from "react"
+import Link from 'next/link';
 
 import { cn } from "@/lib/utils"
 import { toast } from "@/hooks/use-toast"
@@ -58,7 +59,6 @@ export default function DatePickerForm() {
   const getInformation = async () => {
     const response = await fetch('https://kubook-exp.shop/information/@me')
     const data = await response.json()
-    console.log(data)
     setPeople(data.friends)
     setKeywords(data.tags)
   }
@@ -68,8 +68,7 @@ export default function DatePickerForm() {
   }, [])
 
   async function onSubmit(data) {
-    try {
-      // FormData 객체 생성
+    try {``
       const formData = new FormData()
       formData.append('dob', data.dob.toISOString())
       formData.append('memory', data.memory)
@@ -82,7 +81,6 @@ export default function DatePickerForm() {
         formData.append(`keywords[${index}]`, keyword)
       })
 
-      // API 요청
       const response = await fetch('/api/memories', {
         method: 'POST',
         body: formData,
@@ -130,8 +128,10 @@ export default function DatePickerForm() {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <h1 className="text-2xl font-bold text-center pt-5 text-primary">타임캡슐 멜로디</h1>
+    <div className="min-h-screen bg-background bg-[url('/media/sea_background.png')] bg-cover bg-center bg-no-repeat">
+      <Link href="/" className="relative flex justify-center pt-5">
+          <img src="/media/logo.png" alt="logo" className="m-auto w-70% px-15" />
+      </Link>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 p-4 max-w-[500px] mx-auto">
           <FormField

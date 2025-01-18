@@ -2,6 +2,7 @@
 
 import { Friendinfo } from "@/components/ui/friend"
 import { useState, useEffect } from "react"
+import Link from 'next/link';
 
 export default function Friends() {
   const [friends, setFriends] = useState([])
@@ -27,7 +28,10 @@ export default function Friends() {
   }
 
   return (
-    <div>
+    <div className="min-h-screen bg-background bg-[url('/media/sea_background.png')] bg-cover bg-center bg-no-repeat">
+      <Link href="/" className="relative flex justify-center pt-5">
+          <img src="/media/logo.png" alt="logo" className="m-auto w-70% px-15" />
+      </Link>
       {friends && friends.length > 0 ? (
         friends.map((friend) => (
           <Friendinfo 
