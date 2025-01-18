@@ -7,11 +7,11 @@ import { useParams } from "next/navigation";
 
 export default function byKeyword() {
     const params = useParams()
-    const keyword = params.keyword
+    const keyword = decodeURIComponent(params.keyword)
 
     const [musicList, setMusicList] = useState([]);
     const getMusicList = async () => {
-        const response = await fetch(`https://kubook-exp.shop/music/by-keyword/${keyword}`);
+        const response = await fetch(`https://kubook-exp.shop/music/by-keyword/${encodeURIComponent(keyword)}`);
         const data = await response.json();
         console.log(data);
         setMusicList(data);
@@ -26,6 +26,7 @@ export default function byKeyword() {
                 <img src="/media/logo.png" alt="logo" className="m-auto w-70% px-15" />
             </Link>
             <div className="grid grid-cols-1 gap-8 mt-8 pr-7 pl-14">
+                <h1 className="text-2xl font-bold pl-12">키워드: {keyword}</h1>
                 {musicList.map((period) => (
                     <div key={`${period.year}-${period.month}`} className="space-y-4 overflow-y-auto">
                         <h2 className="text-xl font-bold pl-12">{`${period.year}-${String(period.month).padStart(2, '0')}`}</h2>

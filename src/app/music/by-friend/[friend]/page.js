@@ -7,7 +7,7 @@ import { useParams } from "next/navigation";
 
 export default function byFriend() {
     const params = useParams()
-    const friend = params.friend
+    const friend = decodeURIComponent(params.friend)
 
     const [musicList, setMusicList] = useState([]);
     const getMusicList = async () => {
@@ -26,6 +26,7 @@ export default function byFriend() {
                 <img src="/media/logo.png" alt="logo" className="m-auto w-70% px-15" />
             </Link>
             <div className="grid grid-cols-1 gap-8 mt-8 pr-7 pl-14">
+                <h1 className="text-2xl font-bold pl-12">친구: {friend}</h1>
                 {musicList.map((period) => (
                     <div key={`${period.year}-${period.month}`} className="space-y-4 overflow-y-auto">
                         <h2 className="text-xl font-bold pl-12">{`${period.year}-${String(period.month).padStart(2, '0')}`}</h2>
