@@ -32,7 +32,7 @@ export default function byFriend() {
                         <h2 className="text-xl font-bold pl-12">{`${period.year}-${String(period.month).padStart(2, '0')}`}</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[70vh] overflow-y-auto">
                             {period.music.map((music) => (
-                                <Link href={`/streaming/${music.musicId}`} key={music.musicId}>
+                                <Link href={`/music/streaming/${music.musicId}`} key={music.musicId}>
                                     <MusicList image={music.image} title={music.musicTitle} />
                                 </Link>
                             ))}

@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 import { useState, useEffect } from "react"
 import Link from 'next/link';
+import { useRouter } from 'next/navigation'
 
 import { cn } from "@/lib/utils"
 import { toast } from "@/hooks/use-toast"
@@ -33,18 +34,23 @@ const FormSchema = z.object({
   dob: z.date({
     required_error: "날짜를 선택해주세요.",
   }),
-  image: z.any().refine((files) => files?.length > 0, "사진을 업로드해주세요."),
   memory: z.string().min(1, "추억을 입력해주세요."),
   people: z.array(z.string()).default([]),
   keywords: z.array(z.string()).default([]),
   musicLink: z.string().optional(),
 })
 
+const ImageSchema = z.object({
+  image: z.any().refine((files) => files?.length > 0, "사진을 업로드해주세요.")
+})
+
 export default function DatePickerForm() {
+  const router = useRouter()
   const [people, setPeople] = useState([])
   const [newPerson, setNewPerson] = useState("")
   const [keywords, setKeywords] = useState([])
   const [newKeyword, setNewKeyword] = useState("")
+  const [selectedImage, setSelectedImage] = useState(null)
 
   const form = useForm({
     resolver: zodResolver(FormSchema),
@@ -59,8 +65,8 @@ export default function DatePickerForm() {
   const getInformation = async () => {
     const response = await fetch('https://kubook-exp.shop/information/@me')
     const data = await response.json()
-    setPeople(data.friends)
-    setKeywords(data.tags)
+    setPeople(data.friends.map(friend => friend.name))
+    setKeywords(data.tags.map(tag => tag.keyword))
   }
 
   useEffect(() => {
@@ -68,22 +74,52 @@ export default function DatePickerForm() {
   }, [])
 
   async function onSubmit(data) {
-    try {``
-      const formData = new FormData()
-      formData.append('dob', data.dob.toISOString())
-      formData.append('memory', data.memory)
-      formData.append('image', data.image[0])
-      formData.append('musicLink', data.musicLink)
-      people.forEach((person, index) => {
-        formData.append(`people[${index}]`, person)
+    try {
+      if (!selectedImage) {
+        throw new Error('이미지를 선택해주세요.')
+      }
+
+      const presignedResponse = await fetch(`https://kubook-exp.shop/presigned-url?file_name=${selectedImage.name}`, {
+        method: 'GET'
       })
-      keywords.forEach((keyword, index) => {
-        formData.append(`keywords[${index}]`, keyword)
+      
+      if (!presignedResponse.ok) {
+        throw new Error('Presigned URL을 가져오는데 실패했습니다.')
+      }
+
+      console.log('asdf response', presignedResponse)
+
+      const { presignedUrl, file_key } = await presignedResponse.json()
+
+      const uploadResponse = await fetch(presignedUrl, {
+        method: 'PUT',
+        body: selectedImage,
+        headers: {
+          'Content-Type': 'application/octet-stream'
+        }
       })
 
-      const response = await fetch('/api/memories', {
+      if (!uploadResponse.ok) {
+        throw new Error('이미지 업로드에 실패했습니다.')
+      }
+
+      const formData = {
+        musicId: 0,
+        musicTitle: data.musicLink,
+        date: data.dob.toISOString(),
+        friends: people,
+        diary: data.memory, 
+        feeling: 0,
+        keywords: keywords,
+        image: selectedImage.name
+      }
+
+      const response = await fetch('https://kubook-exp.shop/memory', {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData)
       })
 
       if (!response.ok) {
@@ -96,6 +132,8 @@ export default function DatePickerForm() {
         title: "저장되었습니다",
         description: "추억이 성공적으로 저장되었습니다.",
       })
+
+      router.push('/')
     } catch (error) {
       toast({
         title: "에러가 발생했습니다",
@@ -230,25 +268,18 @@ export default function DatePickerForm() {
                 </Button>
                 </div>
             </FormItem>
-            <FormField
-                control={form.control}
-                name="image"
-                render={({ field: { onChange, value, ...field } }) => (
-                <FormItem>
-                    <FormLabel>추억 사진</FormLabel>
-                    <FormControl>
-                    <Input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => onChange(e.target.files)}
-                        className="h-15 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-secondary file:text-foreground hover:file:bg-secondary/80"
-                        {...field}
-                    />
-                    </FormControl>
-                    <FormMessage />
-                </FormItem>
-                )}
-            />
+            <FormItem>
+                <FormLabel>추억 사진</FormLabel>
+                <FormControl>
+                <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={(e) => setSelectedImage(e.target.files[0])}
+                    className="h-15 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-secondary file:text-foreground hover:file:bg-secondary/80"
+                />
+                </FormControl>
+                <FormMessage />
+            </FormItem>
             <FormField
                 control={form.control}
                 name="musicLink"
