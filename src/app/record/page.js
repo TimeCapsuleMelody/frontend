@@ -128,184 +128,186 @@ export default function DatePickerForm() {
   }
 
   return (
-    <div className="min-h-screen bg-background bg-[url('/media/sea_background.png')] bg-cover bg-center bg-no-repeat">
+    <div className="pb-[5%] min-h-screen bg-background bg-[url('/media/sea_background.png')] bg-cover bg-center bg-no-repeat">
       <Link href="/" className="relative flex justify-center pt-5">
           <img src="/media/logo.png" alt="logo" className="m-auto w-70% px-15" />
       </Link>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 p-4 max-w-[500px] mx-auto">
-          <FormField
-            control={form.control}
-            name="dob"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <FormLabel>추억 날짜</FormLabel>
-                <Popover>
-                  <PopoverTrigger asChild>
+      <div className="flex justify-center items-center min-h-[500px] bg-indigo-50/80 mt-[5%] mx-[5%] rounded-2xl">
+        <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 p-4 max-w-[500px] mx-auto">
+            <FormField
+                control={form.control}
+                name="dob"
+                render={({ field }) => (
+                <FormItem className="flex flex-col">
+                    <FormLabel>추억 날짜</FormLabel>
+                    <Popover>
+                    <PopoverTrigger asChild>
+                        <FormControl>
+                        <Button
+                            variant={"outline"}
+                            className={cn(
+                            "w-full pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                            )}
+                        >
+                            {field.value ? (
+                            format(field.value, "PPP")
+                            ) : (
+                            <span>날짜 선택</span>
+                            )}
+                            <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                        </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        disabled={(date) =>
+                            date > new Date() || date < new Date("1900-01-01")
+                        }
+                        initialFocus
+                        />
+                    </PopoverContent>
+                    </Popover>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="memory"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>나의 추억</FormLabel>
                     <FormControl>
-                      <Button
-                        variant={"outline"}
-                        className={cn(
-                          "w-full pl-3 text-left font-normal",
-                          !field.value && "text-muted-foreground"
-                        )}
-                      >
-                        {field.value ? (
-                          format(field.value, "PPP")
-                        ) : (
-                          <span>날짜 선택</span>
-                        )}
-                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={field.value}
-                      onSelect={field.onChange}
-                      disabled={(date) =>
-                        date > new Date() || date < new Date("1900-01-01")
-                      }
-                      initialFocus
+                    <Textarea 
+                        {...field} 
+                        placeholder="추억을 입력하세요" 
+                        className="min-h-[120px] resize-none"
                     />
-                  </PopoverContent>
-                </Popover>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="memory"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>나의 추억</FormLabel>
-                <FormControl>
-                  <Textarea 
-                    {...field} 
-                    placeholder="추억을 입력하세요" 
-                    className="min-h-[120px] resize-none"
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormItem>
-            <FormLabel>키워드</FormLabel>
-            <div className="flex flex-wrap gap-2 mb-2">
-              {keywords.map((keyword, index) => (
-                <div key={index} className="flex items-center gap-1 bg-secondary px-3 py-1 rounded-full text-sm">
-                  <span>{keyword}</span>
-                  <XCircleIcon
-                    className="h-4 w-4 cursor-pointer hover:text-destructive"
-                    onClick={() => handleRemoveKeyword(index)}
-                  />
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+            <FormItem>
+                <FormLabel>키워드</FormLabel>
+                <div className="flex flex-wrap gap-2 mb-2">
+                {keywords.map((keyword, index) => (
+                    <div key={index} className="flex items-center gap-1 bg-secondary px-3 py-1 rounded-full text-sm">
+                    <span>{keyword}</span>
+                    <XCircleIcon
+                        className="h-4 w-4 cursor-pointer hover:text-destructive"
+                        onClick={() => handleRemoveKeyword(index)}
+                    />
+                    </div>
+                ))}
                 </div>
-              ))}
-            </div>
-            <div className="flex flex-col gap-2 sm:flex-row">
-              <Input
-                value={newKeyword}
-                onChange={(e) => setNewKeyword(e.target.value)}
-                placeholder="키워드를 입력하세요"
-                className="flex-1"
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault()
-                    handleAddKeyword()
-                  }
-                }}
-              />
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleAddKeyword}
-                className="w-full sm:w-24"
-              >
-                <PlusCircleIcon className="h-4 w-4 mr-2" />
-                추가
-              </Button>
-            </div>
-          </FormItem>
-          <FormField
-            control={form.control}
-            name="image"
-            render={({ field: { onChange, value, ...field } }) => (
-              <FormItem>
-                <FormLabel>추억 사진</FormLabel>
-                <FormControl>
-                  <Input
-                    type="file"
-                    accept="image/*"
-                    onChange={(e) => onChange(e.target.files)}
-                    className="h-15 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-secondary file:text-foreground hover:file:bg-secondary/80"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormField
-            control={form.control}
-            name="musicLink"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>음악</FormLabel>
-                <FormControl>
-                  <Input
-                    type="text"
-                    placeholder="음악 링크를 입력하세요"
-                    className="w-full"
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-          <FormItem>
-            <FormLabel>함께한 사람들</FormLabel>
-            <div className="flex flex-wrap gap-2 mb-2">
-              {people.map((person, index) => (
-                <div key={index} className="flex items-center gap-1 bg-secondary px-3 py-1 rounded-full text-sm">
-                  <span>{person}</span>
-                  <XCircleIcon
-                    className="h-4 w-4 cursor-pointer hover:text-destructive"
-                    onClick={() => handleRemovePerson(index)}
-                  />
+                <div className="flex flex-col gap-2 sm:flex-row">
+                <Input
+                    value={newKeyword}
+                    onChange={(e) => setNewKeyword(e.target.value)}
+                    placeholder="키워드를 입력하세요"
+                    className="flex-1"
+                    onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault()
+                        handleAddKeyword()
+                    }
+                    }}
+                />
+                <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleAddKeyword}
+                    className="w-full sm:w-24"
+                >
+                    <PlusCircleIcon className="h-4 w-4 mr-2" />
+                    추가
+                </Button>
                 </div>
-              ))}
-            </div>
-            <div className="flex flex-col gap-2 sm:flex-row">
-              <Input
-                value={newPerson}
-                onChange={(e) => setNewPerson(e.target.value)}
-                placeholder="이름을 입력하세요"
-                className="flex-1"
-                onKeyPress={(e) => {
-                  if (e.key === 'Enter') {
-                    e.preventDefault()
-                    handleAddPerson()
-                  }
-                }}
-              />
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleAddPerson}
-                className="w-full sm:w-24"
-              >
-                <PlusCircleIcon className="h-4 w-4 mr-2" />
-                추가
-              </Button>
-            </div>
-          </FormItem>
-          <Button type="submit" className="w-full">추억 저장하기</Button>
-        </form>
-      </Form>
+            </FormItem>
+            <FormField
+                control={form.control}
+                name="image"
+                render={({ field: { onChange, value, ...field } }) => (
+                <FormItem>
+                    <FormLabel>추억 사진</FormLabel>
+                    <FormControl>
+                    <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => onChange(e.target.files)}
+                        className="h-15 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-secondary file:text-foreground hover:file:bg-secondary/80"
+                        {...field}
+                    />
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+            <FormField
+                control={form.control}
+                name="musicLink"
+                render={({ field }) => (
+                <FormItem>
+                    <FormLabel>음악</FormLabel>
+                    <FormControl>
+                    <Input
+                        type="text"
+                        placeholder="음악 링크를 입력하세요"
+                        className="w-full"
+                        {...field}
+                    />
+                    </FormControl>
+                    <FormMessage />
+                </FormItem>
+                )}
+            />
+            <FormItem>
+                <FormLabel>함께한 사람들</FormLabel>
+                <div className="flex flex-wrap gap-2 mb-2">
+                {people.map((person, index) => (
+                    <div key={index} className="flex items-center gap-1 bg-secondary px-3 py-1 rounded-full text-sm">
+                    <span>{person}</span>
+                    <XCircleIcon
+                        className="h-4 w-4 cursor-pointer hover:text-destructive"
+                        onClick={() => handleRemovePerson(index)}
+                    />
+                    </div>
+                ))}
+                </div>
+                <div className="flex flex-col gap-2 sm:flex-row">
+                <Input
+                    value={newPerson}
+                    onChange={(e) => setNewPerson(e.target.value)}
+                    placeholder="이름을 입력하세요"
+                    className="flex-1"
+                    onKeyPress={(e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault()
+                        handleAddPerson()
+                    }
+                    }}
+                />
+                <Button
+                    type="button"
+                    variant="outline"
+                    onClick={handleAddPerson}
+                    className="w-full sm:w-24"
+                >
+                    <PlusCircleIcon className="h-4 w-4 mr-2" />
+                    추가
+                </Button>
+                </div>
+            </FormItem>
+            <Button type="submit" className="w-full">추억 저장하기</Button>
+            </form>
+        </Form>
+      </div>
     </div>
   )
 }
