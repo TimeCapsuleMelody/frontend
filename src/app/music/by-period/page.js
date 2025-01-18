@@ -29,13 +29,13 @@ export default function Time() {
                             {period.music.map((music) => (
                                 <Link href={`/music/streaming/${music.musicId}`} key={music.musicId}>
                                     <MusicList image={music.image} title={music.musicTitle} />
-                                </Link>
+                                </Link> 
                             ))}
                         </div>
                     </div>
                 ))}
             </div>
-        </div>
+        </div>  
     )
 }
 
