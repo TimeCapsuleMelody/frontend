@@ -1,7 +1,7 @@
 import * as React from "react"
-import { Progress } from "@/components/ui/progress"
-import { Card } from "@/components/ui/card"
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import { Progress } from "../ui/progress"
+import { Card } from "../ui/card"
+import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar"
 
 const Friendinfo = React.forwardRef(({ className, profileImage, progress, name, totalCount, localCount, ...props }, ref) => {
   return (
@@ -13,7 +13,7 @@ const Friendinfo = React.forwardRef(({ className, profileImage, progress, name, 
         </Avatar>
         <div className="flex-1">
           <p className="text-sm font-medium mb-2">{name}</p>
-          <Progress value={progress} className="w-full" />
+          <Progress value={progress * 100} className="w-full" />
           <p className="text-sm text-muted-foreground">{localCount} / {totalCount}</p>
         </div>
       </div>

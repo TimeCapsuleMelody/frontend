@@ -1,21 +1,47 @@
+"use client"
+
 import { Friendinfo } from "@/components/ui/friend"
+import { useState, useEffect } from "react"
 
 export default function Friends() {
   const [friends, setFriends] = useState([])
-  const getFriends = async () => {
-    const response = await fetch('https://kubook-exp.shop/api/friends/with-statistic')
-    const data = await response.json()
-    setFriends(data)
-  }
+  const [isLoading, setIsLoading] = useState(true)
+
   useEffect(() => {
+    const getFriends = async () => {
+      try {
+        const response = await fetch('https://kubook-exp.shop/friend/with-statistic')
+        const data = await response.json()
+        setFriends(data || [])
+      } catch (error) {
+        setFriends([])
+      } finally {
+        setIsLoading(false)
+      }
+    }
     getFriends()
   }, [])
 
+  if (isLoading) {
+    return <div className="p-4">Loading...</div>
+  }
+
   return (
     <div>
-      {friends.map((friend) => (
-        <Friendinfo key={friend.id} name={friend.name} progress={friend.ratio} profileImage={friend.image} totalCount={friend.totalCount} localCount={friend.localCount} />
-      ))}
+      {friends && friends.length > 0 ? (
+        friends.map((friend) => (
+          <Friendinfo 
+            key={friend.id || Math.random()} 
+            name={friend.name || ''} 
+            progress={friend.ratio || 0} 
+            profileImage={friend.image || ''} 
+            totalCount={friend.totalCount || 0} 
+            localCount={friend.localCount || 0} 
+          />
+        ))
+      ) : (
+        <div className="p-4">나와 함께한 사람들이 없습니다.</div>
+      )}
     </div>
   )
 }
