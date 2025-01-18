@@ -40,14 +40,14 @@ export default function Home() {
           <Link href="/record">
             <button className="h-40 text-lg w-full bg-[url('/media/time_capsule.png')] bg-contain bg-center bg-no-repeat text-black">노래<br />추가하기</button>
           </Link>
-          <Link href="/memory">
+          <Link href="/music/by-period">
             <button className="h-40 text-lg w-full bg-[url('/media/time_capsule.png')] bg-contain bg-center bg-no-repeat text-black">노래<br />모아보기</button>
           </Link>
           <Link href="/friends">
             <button className="h-40 text-lg w-full bg-[url('/media/time_capsule.png')] bg-contain bg-center bg-no-repeat text-black">나와 함께한<br />사람들</button>
           </Link>
-          <Link href="/emotion">
-            <button className="h-40 text-lg w-full bg-[url('/media/time_capsule.png')] bg-contain bg-center bg-no-repeat text-black">감정<br />히스토리</button>
+          <Link href="/keyword">
+            <button className="h-40 text-lg w-full bg-[url('/media/time_capsule.png')] bg-contain bg-center bg-no-repeat text-black">키워드로<br />모아보기</button>
           </Link>
         </div>
       </div>

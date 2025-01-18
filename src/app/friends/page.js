@@ -34,14 +34,15 @@ export default function Friends() {
       </Link>
       {friends && friends.length > 0 ? (
         friends.map((friend) => (
-          <Friendinfo 
-            key={friend.id || Math.random()} 
-            name={friend.name || ''} 
-            progress={friend.ratio || 0} 
-            profileImage={friend.image || ''} 
-            totalCount={friend.totalCount || 0} 
-            localCount={friend.localCount || 0} 
-          />
+          <Link href={`/music/by-friend/${friend.name}`} key={friend.id || Math.random()}>
+            <Friendinfo 
+              name={friend.name || ''} 
+              progress={friend.ratio || 0} 
+              profileImage={friend.image || ''} 
+              totalCount={friend.totalCount || 0} 
+              localCount={friend.localCount || 0} 
+            />
+          </Link>
         ))
       ) : (
         <div className="p-4">나와 함께한 사람들이 없습니다.</div>

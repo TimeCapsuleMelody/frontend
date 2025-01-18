@@ -23,12 +23,14 @@ export default function Keyword() {
             <div className="relative container mx-auto px-8 py-8">
                 <div className="grid grid-cols-2 gap-4">
                     {keywords.map((keyword, index) => (
-                        <div
-                            key={index}
+                        <Link href={`/music/by-keyword/${keyword}`} key={index}>
+                            <div
+                                key={index}
                             className="h-40 flex items-center justify-center bg-[url('/media/bubble_background.png')] bg-contain bg-bottom bg-no-repeat"
                         >
                             <span className="text-lg font-medium">{keyword}</span>
                         </div>
+                        </Link>
                     ))}
                 </div>
             </div>
