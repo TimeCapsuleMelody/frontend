@@ -1,6 +1,28 @@
+"use client"
+
 import Link from "next/link";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background bg-[url('/media/start_page.png')] bg-cover bg-center bg-no-repeat">
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background bg-[url('/media/sea_background.png')] bg-cover bg-center bg-no-repeat">
       <Link href="/" className="relative flex justify-center pt-5">
