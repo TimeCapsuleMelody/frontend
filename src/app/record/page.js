@@ -5,7 +5,7 @@ import { format } from "date-fns"
 import { CalendarIcon, ImageIcon, PlusCircleIcon, XCircleIcon } from "lucide-react"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 
 import { cn } from "@/lib/utils"
 import { toast } from "@/hooks/use-toast"
@@ -58,11 +58,14 @@ export default function DatePickerForm() {
   const getInformation = async () => {
     const response = await fetch('https://kubook-exp.shop/information/@me')
     const data = await response.json()
-    console.log('hi')
     console.log(data)
-    setPeople(data.people)
-    setKeywords(data.keywords)
+    setPeople(data.friends)
+    setKeywords(data.tags)
   }
+
+  useEffect(() => {
+    getInformation()
+  }, [])
 
   async function onSubmit(data) {
     try {
