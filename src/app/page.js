@@ -18,7 +18,7 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background bg-[url('/media/start_page.png')] bg-cover bg-center bg-no-repeat">
+      <div className="min-h-screen bg-background bg-[url('/media/start_page.png')] bg-contain bg-center bg-no-repeat bg-[#E6E6FA]">
       </div>
     );
   }
