@@ -8,7 +8,7 @@ export default function Keyword() {
     const getKeywords = async () => {
         const response = await fetch('https://kubook-exp.shop/information/@me');
         const data = await response.json();
-        setKeywords(data.tags || []);
+        setKeywords(data.tags.map(tag => tag.keyword))
     }
     useEffect(() => {
         getKeywords();
